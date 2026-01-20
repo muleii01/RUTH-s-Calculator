@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff9a9e">
+    <title>Love Calculator for RUTH 💖</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .phone {
+            background: #1c1c1c;
+            width: 300px;
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .screen {
+            background: #000;
+            color: white;
+            height: 120px;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: right;
+            font-size: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .message {
+            font-size: 14px;
+            color: #ff9a9e;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            height: 55px;
+            border-radius: 50%;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .num {
+            background: #333;
+            color: white;
+        }
+
+        .op {
+            background: #ff9a9e;
+            color: white;
+        }
+
+        .clear {
+            background: #ff4d6d;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="phone">
+    <div class="screen">
+    <div style="font-size:14px; color:#ff9a9e; text-align:left;">
+        💖 RUTH'S Calculator
+    </div>
+    <div id="display">0</div>
+    <div class="message" id="message"> 💕</div>
+</div>
+
+    <div class="buttons">
+        <button class="clear" onclick="clearAll()">C</button>
+        <button class="op" onclick="setOp('/')">÷</button>
+        <button class="op" onclick="setOp('*')">×</button>
+        <button class="op" onclick="setOp('-')">−</button>
+
+        <button class="num" onclick="addNum('7')">7</button>
+        <button class="num" onclick="addNum('8')">8</button>
+        <button class="num" onclick="addNum('9')">9</button>
+        <button class="op" onclick="setOp('+')">+</button>
+
+        <button class="num" onclick="addNum('4')">4</button>
+        <button class="num" onclick="addNum('5')">5</button>
+        <button class="num" onclick="addNum('6')">6</button>
+        <button class="num" onclick="calculate()">=</button>
+
+        <button class="num" onclick="addNum('1')">1</button>
+        <button class="num" onclick="addNum('2')">2</button>
+        <button class="num" onclick="addNum('3')">3</button>
+        <button class="num" onclick="addNum('0')">0</button>
+    </div>
+</div>
+
+<script>
+    if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
+    let current = "";
+    let previous = "";
+    let operator = "";
+
+    const messages = [
+        "Keep going 💖",
+        "You're amazing ✨",
+        "MULE Loves you 😍",
+        "Proud of you 💕",
+        "Cute and clever 😉",
+        "Math queen 👑"
+    ];
+
+    function randomMessage() {
+        return messages[Math.floor(Math.random() * messages.length)];
+    }
+
+    function playClickSound() {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.frequency.value = 500;
+        gain.gain.value = 0.08;
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.07);
+    }
+
+    function addNum(num) {
+        playClickSound();
+        current += num;
+        updateDisplay(current);
+    }
+
+    function setOp(op) {
+        playClickSound();
+        previous = current;
+        current = "";
+        operator = op;
+    }
+
+    function calculate() {
+        playClickSound();
+        let result;
+
+        let a = Number(previous);
+        let b = Number(current);
+
+        if (operator === "+") result = a + b;
+        if (operator === "-") result = a - b;
+        if (operator === "*") result = a * b;
+        if (operator === "/") result = a / b;
+
+        current = result.toString();
+        operator = "";
+        updateDisplay(current);
+        document.getElementById("message").innerText = randomMessage();
+    }
+
+    function clearAll() {
+        playClickSound();
+        current = "";
+        previous = "";
+        operator = "";
+        updateDisplay("0");
+        document.getElementById("message").innerText = "All clean ✨";
+    }
+
+    function updateDisplay(value) {
+        document.getElementById("display").innerText = value;
+    }
+</script>
+
+</body>
+</html>
+<p>Made by MULE</p>
+
